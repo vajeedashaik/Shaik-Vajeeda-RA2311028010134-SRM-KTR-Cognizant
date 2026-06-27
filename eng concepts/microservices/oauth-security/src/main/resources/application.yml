@@ -1,0 +1,33 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: oauth-security
+
+  security:
+    # Exercise 1: OAuth2 Client (SSO with Google OIDC)
+    oauth2:
+      client:
+        registration:
+          my-client:
+            client-id: YOUR_CLIENT_ID
+            client-secret: YOUR_CLIENT_SECRET
+            scope: openid, profile, email
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          my-provider:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: sub
+
+      # Exercise 2: Resource Server — validates JWT from authorization server
+      resourceserver:
+        jwt:
+          issuer-uri: https://issuer.example.com
+
+    # Exercise 3: Secret key for HMAC-SHA256 JWT signing
+    jwt:
+      secret: YOUR_SECRET_KEY_MINIMUM_32_CHARS_LONG
