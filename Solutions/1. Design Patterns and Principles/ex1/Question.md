@@ -12,3 +12,4 @@ o	Provide a public static method to get the instance of the Logger class.
 o	Write code to ensure that the Logger class follows the Singleton design pattern.
 4.	Test the Singleton Implementation:
 o	Create a test class to verify that only one instance of Logger is created and used across the application.
+heloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
