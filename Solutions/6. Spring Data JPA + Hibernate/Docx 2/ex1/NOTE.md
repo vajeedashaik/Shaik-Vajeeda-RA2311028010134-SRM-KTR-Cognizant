@@ -1,0 +1,1 @@
+Reference copy from the live project at Solutions/6. Spring Data JPA + Hibernate/orm-learn/ — see 07-Spring-Data-JPA-Hibernate.md in the guide/ folder for how to actually run it (needs MySQL via Docker).

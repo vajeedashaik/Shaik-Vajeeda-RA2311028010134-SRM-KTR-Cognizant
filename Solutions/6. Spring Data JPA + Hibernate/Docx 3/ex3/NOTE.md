@@ -1,0 +1,1 @@
+This hands-on (Attempt/AttemptRepository/AttemptService for quiz data) was not implemented in the orm-learn project — no matching source file exists. See 07-Spring-Data-JPA-Hibernate.md in the guide/ folder for how to run the live project at Solutions/6. Spring Data JPA + Hibernate/orm-learn/.

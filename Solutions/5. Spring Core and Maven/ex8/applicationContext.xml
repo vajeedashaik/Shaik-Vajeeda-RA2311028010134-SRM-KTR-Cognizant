@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- ================================================
+         Exercise 1: Basic Spring Application
+         Define beans for BookService and BookRepository
+         ================================================ -->
+    <bean id="bookRepository" class="com.library.repository.BookRepository"/>
+
+    <!-- Exercise 2: Dependency Injection - setter injection
+         BookRepository wired into BookService via <property> -->
+    <bean id="bookService" class="com.library.service.BookService">
+        <!-- Constructor injection (Exercise 7) -->
+        <constructor-arg ref="bookRepository"/>
+        <!-- Setter injection (Exercise 2, 7) -->
+        <property name="bookRepository" ref="bookRepository"/>
+    </bean>
+
+    <!-- ================================================
+         Exercise 6: Annotation-based config
+         Enable component scanning for @Service, @Repository
+         ================================================ -->
+    <context:component-scan base-package="com.library"/>
+
+    <!-- ================================================
+         Exercise 3, 8: AOP Configuration
+         Enable AspectJ auto-proxying and register LoggingAspect
+         ================================================ -->
+    <aop:aspectj-autoproxy/>
+
+    <bean id="loggingAspect" class="com.library.aspect.LoggingAspect"/>
+
+</beans>

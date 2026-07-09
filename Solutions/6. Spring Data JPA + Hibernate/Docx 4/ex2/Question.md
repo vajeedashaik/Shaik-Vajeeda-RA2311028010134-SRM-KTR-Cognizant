@@ -1,0 +1,10 @@
+Exercise 2: Employee Management System - Creating Entities
+Business Scenario: 
+Define JPA entities for Employee and Department with appropriate relationships.
+Instructions:
+Creating JPA Entities:
+Define Employee entity with fields: id, name, email, department.
+Define Department entity with fields: id, name.
+Mapping Entities to Database Tables:
+Use annotations like @Entity, @Table, @Id, @GeneratedValue, etc.
+Define one-to-many relationship between Department and Employee.

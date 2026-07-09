@@ -1,0 +1,1 @@
+This hands-on is a conceptual/SME walkthrough with no dedicated code in the orm-learn project (see Question.md) — no source file copy applies here. See 07-Spring-Data-JPA-Hibernate.md in the guide/ folder for how to run the live project at Solutions/6. Spring Data JPA + Hibernate/orm-learn/.
