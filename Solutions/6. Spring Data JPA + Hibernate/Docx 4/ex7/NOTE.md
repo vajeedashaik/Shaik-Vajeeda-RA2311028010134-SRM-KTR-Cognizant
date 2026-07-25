@@ -1,1 +1,5 @@
-This document describes a separate, standalone "EmployeeManagementSystem" project (H2 database, REST controllers, auditing, projections, multi-datasource) that was not implemented in this repo — no matching source file exists in orm-learn. See 07-Spring-Data-JPA-Hibernate.md in the guide/ folder for how to run the live orm-learn project at Solutions/6. Spring Data JPA + Hibernate/orm-learn/.
+Reference copy from the live project at Solutions/6. Spring Data JPA + Hibernate/EmployeeManagementSystem/. See ex1's NOTE.md for how to run the project.
+
+Auditable is a @MappedSuperclass carrying @CreatedDate/@LastModifiedDate/@CreatedBy/@LastModifiedBy, populated via Spring Data's AuditingEntityListener (@EntityListeners on Auditable). Employee extends it. JpaAuditingConfig enables auditing (@EnableJpaAuditing) and supplies the AuditorAware<String> bean (a fixed "system" auditor, since this project has no authentication layer to pull a real user from).
+
+Verified: creating an employee populated createdDate/createdBy, and updating it advanced lastModifiedDate/lastModifiedBy.

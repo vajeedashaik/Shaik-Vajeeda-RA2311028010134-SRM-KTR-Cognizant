@@ -1,11 +1,15 @@
 package com.cognizant.ormlearn;
 
+import com.cognizant.ormlearn.model.Attempt;
+import com.cognizant.ormlearn.model.AttemptQuestion;
 import com.cognizant.ormlearn.model.Country;
 import com.cognizant.ormlearn.model.Department;
 import com.cognizant.ormlearn.model.Employee;
+import com.cognizant.ormlearn.model.Options;
 import com.cognizant.ormlearn.model.Skill;
 import com.cognizant.ormlearn.model.Stock;
 import com.cognizant.ormlearn.repository.StockRepository;
+import com.cognizant.ormlearn.service.AttemptService;
 import com.cognizant.ormlearn.service.CountryService;
 import com.cognizant.ormlearn.service.DepartmentService;
 import com.cognizant.ormlearn.service.EmployeeService;
@@ -20,8 +24,11 @@ import org.springframework.context.ApplicationContext;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class OrmLearnApplication {
@@ -33,6 +40,7 @@ public class OrmLearnApplication {
     private static DepartmentService departmentService;
     private static SkillService skillService;
     private static StockRepository stockRepository;
+    private static AttemptService attemptService;
 
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(OrmLearnApplication.class, args);
@@ -43,6 +51,7 @@ public class OrmLearnApplication {
         departmentService = context.getBean(DepartmentService.class);
         skillService = context.getBean(SkillService.class);
         stockRepository = context.getBean(StockRepository.class);
+        attemptService = context.getBean(AttemptService.class);
 
         // Docx 1 - Hands on 1: get all countries
         testGetAllCountries();
@@ -82,6 +91,9 @@ public class OrmLearnApplication {
 
         // Docx 3 - Hands on 2: HQL for permanent employees
         testGetAllPermanentEmployees();
+
+        // Docx 3 - Hands on 3: HQL for quiz attempt detail
+        testGetAttemptDetail();
 
         // Docx 3 - Hands on 4: HQL aggregate - average salary
         testGetAverageSalary();
@@ -260,6 +272,36 @@ public class OrmLearnApplication {
         LOGGER.debug("Permanent Employees:{}", employees);
         employees.forEach(e -> LOGGER.debug("Skills:{}", e.getSkillList()));
         LOGGER.info("End - testGetAllPermanentEmployees");
+    }
+
+    private static void testGetAttemptDetail() {
+        LOGGER.info("Start - testGetAttemptDetail");
+
+        Attempt attempt = attemptService.getAttemptDetail(1, 1);
+
+        List<AttemptQuestion> attemptQuestions = attempt.getAttemptQuestions().stream()
+                .sorted(Comparator.comparing(AttemptQuestion::getId))
+                .collect(Collectors.toList());
+
+        for (AttemptQuestion attemptQuestion : attemptQuestions) {
+            LOGGER.debug(attemptQuestion.getQuestion().getText());
+
+            Set<Integer> selectedOptionIds = attemptQuestion.getAttemptOptions().stream()
+                    .map(attemptOption -> attemptOption.getOption().getId())
+                    .collect(Collectors.toSet());
+
+            List<Options> options = attemptQuestion.getQuestion().getOptions().stream()
+                    .sorted(Comparator.comparing(Options::getId))
+                    .collect(Collectors.toList());
+
+            int index = 1;
+            for (Options option : options) {
+                boolean selected = selectedOptionIds.contains(option.getId());
+                LOGGER.debug(" {}) {}\t{}\t{}", index++, option.getText(), option.getScore(), selected);
+            }
+        }
+
+        LOGGER.info("End - testGetAttemptDetail");
     }
 
     private static void testGetAverageSalary() {
