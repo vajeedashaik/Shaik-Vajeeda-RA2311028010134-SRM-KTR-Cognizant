@@ -44,7 +44,7 @@ class App extends Component {
           <p>Loading...</p>
         ) : (
           <ul>
-            {repos.map((repo, i) => <li key={i}>{repo}</li>)}
+            {repos.map(repo => <li key={repo}>{repo}</li>)}
           </ul>
         )}
       </div>

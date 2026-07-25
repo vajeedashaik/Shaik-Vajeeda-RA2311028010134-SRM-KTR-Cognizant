@@ -1,4 +1,4 @@
-// Exercise 17: fetchuserapp - Fetch user data from REST API (dummyjson.com/users/1)
+// Exercise 17: fetchuserapp - Fetch user data from REST API (https://api.randomuser.me/)
 // Displays title, firstname, image of user
 
 // src/Getuser.js
@@ -15,9 +15,9 @@ class Getuser extends Component {
 
   async componentDidMount() {
     try {
-      const response = await fetch('https://dummyjson.com/users/1');
+      const response = await fetch('https://api.randomuser.me/');
       const data = await response.json();
-      this.setState({ user: data });
+      this.setState({ user: data.results[0] });
     } catch (err) {
       this.setState({ error: err.message });
     }
@@ -32,10 +32,10 @@ class Getuser extends Component {
     return (
       <div>
         <h2>User Details</h2>
-        <img src={user.image} alt={user.firstName} style={{ width: 100, borderRadius: '50%' }} />
-        <p><strong>Title:</strong> {user.title || 'Mr/Ms'}</p>
-        <p><strong>First Name:</strong> {user.firstName}</p>
-        <p><strong>Last Name:</strong> {user.lastName}</p>
+        <img src={user.picture.large} alt={user.name.first} style={{ width: 100, borderRadius: '50%' }} />
+        <p><strong>Title:</strong> {user.name.title}</p>
+        <p><strong>First Name:</strong> {user.name.first}</p>
+        <p><strong>Last Name:</strong> {user.name.last}</p>
         <p><strong>Email:</strong> {user.email}</p>
       </div>
     );

@@ -3,18 +3,29 @@
 // src/App.js
 import React, { Component } from 'react';
 
-// CurrencyConvertor component - converts INR to EUR
+// CurrencyConvertor component - converts INR to EUR and EUR to INR
+const INR_PER_EUR = 89.5;
+
 class CurrencyConvertor extends Component {
   constructor(props) {
     super(props);
-    this.state = { inr: '', eur: '' };
+    this.state = { inr: '', eur: '', inrResult: '', eurResult: '' };
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleReverseSubmit = this.handleReverseSubmit.bind(this);
   }
 
+  // Converts Indian Rupees to Euro
   handleSubmit(e) {
     e.preventDefault();
-    const eur = (this.state.inr / 89.5).toFixed(2);
-    this.setState({ eur });
+    const eurResult = (this.state.inr / INR_PER_EUR).toFixed(2);
+    this.setState({ eurResult });
+  }
+
+  // Converts Euro to Indian Rupees
+  handleReverseSubmit(e) {
+    e.preventDefault();
+    const inrResult = (this.state.eur * INR_PER_EUR).toFixed(2);
+    this.setState({ inrResult });
   }
 
   render() {
@@ -30,7 +41,19 @@ class CurrencyConvertor extends Component {
           />
           <button type="submit">Convert</button>
         </form>
-        {this.state.eur && <p>EUR: €{this.state.eur}</p>}
+        {this.state.eurResult && <p>EUR: €{this.state.eurResult}</p>}
+
+        <h3>Currency Convertor (EUR → INR)</h3>
+        <form onSubmit={this.handleReverseSubmit}>
+          <input
+            type="number"
+            placeholder="Enter EUR amount"
+            value={this.state.eur}
+            onChange={e => this.setState({ eur: e.target.value })}
+          />
+          <button type="submit">Convert</button>
+        </form>
+        {this.state.inrResult && <p>INR: ₹{this.state.inrResult}</p>}
       </div>
     );
   }
@@ -81,7 +104,7 @@ class App extends Component {
         <button onClick={() => this.sayWelcome('welcome')}>Say Welcome</button>
 
         <br /><br />
-        <button onClickCapture={this.handleSyntheticEvent}>OnPress (Synthetic Event)</button>
+        <button onClick={this.handleSyntheticEvent}>OnPress (Synthetic Event)</button>
 
         <br /><br />
         <CurrencyConvertor />
