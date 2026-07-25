@@ -9,6 +9,14 @@ public class OrderedTests {
 
     private static int counter = 0;
 
+    // Resets shared state before each run of this class. Without this, running
+    // OrderedTests both directly and via the AllTests suite in the same JVM
+    // makes the second run see a stale counter and fail.
+    @BeforeAll
+    static void resetCounter() {
+        counter = 0;
+    }
+
     @Test
     @Order(1)
     void firstTest() {
