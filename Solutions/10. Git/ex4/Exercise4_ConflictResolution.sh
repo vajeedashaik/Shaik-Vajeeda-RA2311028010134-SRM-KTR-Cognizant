@@ -35,7 +35,8 @@ cat > hello.xml << 'EOF'
 EOF
 
 git status
-# Changes not staged for commit: modified: hello.xml
+# Changes to be committed: new file: hello.xml   (from the git add above)
+# Changes not staged for commit: modified: hello.xml   (working tree now differs from the staged version)
 
 # ─── STEP 4: Commit changes to branch ──────────────────────────────────────
 git add hello.xml

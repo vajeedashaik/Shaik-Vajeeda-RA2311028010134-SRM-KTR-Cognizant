@@ -58,10 +58,10 @@ git add welcome.txt
 git status
 
 # ─── STEP 6: Commit with multi-line comment via editor ─────────────────────
-# This opens Notepad++ for multi-line commit message
-git commit
-
-# OR commit directly with message:
+# Option A: opens Notepad++ (the configured core.editor) for a multi-line commit message
+# git commit
+#
+# Option B: commit directly with an inline message (used below)
 git commit -m "Add welcome.txt - initial commit for GitDemo project"
 
 # Verify commit
@@ -74,8 +74,10 @@ git status
 # Add remote origin
 git remote add origin https://gitlab.com/<your-username>/GitDemo.git
 
-# Pull remote (in case GitLab created README)
-git pull origin master
+# Pull remote (in case GitLab created README).
+# --allow-unrelated-histories is required here because the local repo and the
+# GitLab-created remote (with its auto-generated README) share no common commit ancestor.
+git pull origin master --allow-unrelated-histories
 
 # Push local commits to remote
 git push origin master
