@@ -1,12 +1,16 @@
 package com.cognizant.springlearn.controller;
 
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +32,12 @@ public class AuthenticationController {
         LOGGER.debug("Authorization header: {}", authHeader);
 
         String user = getUser(authHeader);
-        String token = generateJwt(user);
+        // Request already passed HTTP Basic auth (see SecurityConfig), so the caller's
+        // granted roles are available here; embed them in the token as a "roles" claim
+        // so JwtAuthorizationFilter can restore proper authorities instead of an empty list.
+        Collection<? extends GrantedAuthority> authorities =
+                SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        String token = generateJwt(user, authorities);
 
         Map<String, String> map = new HashMap<>();
         map.put("token", token);
@@ -54,11 +63,15 @@ public class AuthenticationController {
         return user;
     }
 
-    // Generate JWT token valid for 20 minutes
-    private String generateJwt(String user) {
+    // Generate JWT token valid for 20 minutes, embedding the user's roles as a claim
+    private String generateJwt(String user, Collection<? extends GrantedAuthority> authorities) {
         LOGGER.info("START");
+        String roles = authorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
         JwtBuilder builder = Jwts.builder();
         builder.setSubject(user);
+        builder.claim("roles", roles);
         builder.setIssuedAt(new Date());
         // Expire in 20 minutes (1200000 ms)
         builder.setExpiration(new Date((new Date()).getTime() + 1200000));

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
@@ -16,34 +15,39 @@ public class CountryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CountryService.class);
 
+    private final List<Country> countryList;
+    private final Country countryIndia;
+
+    // Load country.xml once at startup and cache the beans, instead of opening
+    // a new ApplicationContext on every request (mirrors EmployeeDao/DepartmentDao pattern).
     @SuppressWarnings("unchecked")
-    private List<Country> getCountryList() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("country.xml");
-        return context.getBean("countryList", List.class);
+    public CountryService() {
+        LOGGER.info("START");
+        try (ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("country.xml")) {
+            this.countryList = context.getBean("countryList", List.class);
+            this.countryIndia = context.getBean("country", Country.class);
+        }
+        LOGGER.info("END");
     }
 
     // Handson 2 (file 2): return India country
     public Country getCountryIndia() {
         LOGGER.info("START");
-        ApplicationContext context = new ClassPathXmlApplicationContext("country.xml");
-        Country country = context.getBean("country", Country.class);
         LOGGER.info("END");
-        return country;
+        return countryIndia;
     }
 
     // Handson 2 (file 2): return all countries
     public List<Country> getAllCountries() {
         LOGGER.info("START");
-        List<Country> list = getCountryList();
         LOGGER.info("END");
-        return list;
+        return countryList;
     }
 
     // Handson 2 (file 2): find country by code (case insensitive)
     public Country getCountry(String code) throws CountryNotFoundException {
         LOGGER.info("START");
-        List<Country> list = getCountryList();
-        Country found = list.stream()
+        Country found = countryList.stream()
                 .filter(c -> c.getCode().equalsIgnoreCase(code))
                 .findFirst()
                 .orElseThrow(CountryNotFoundException::new);

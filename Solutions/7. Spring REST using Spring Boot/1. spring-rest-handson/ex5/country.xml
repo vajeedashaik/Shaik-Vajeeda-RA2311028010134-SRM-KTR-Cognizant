@@ -4,8 +4,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            https://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!-- Handson 4 & 5: Single country bean (default singleton scope) -->
-    <bean id="country" class="com.cognizant.springlearn.Country">
+    <!-- Hands on 5: scope="prototype" so each getBean() call returns a new instance
+         (constructor runs twice), demonstrating prototype scope per Question.md. -->
+    <bean id="country" class="com.cognizant.springlearn.Country" scope="prototype">
         <property name="code" value="IN" />
         <property name="name" value="India" />
     </bean>

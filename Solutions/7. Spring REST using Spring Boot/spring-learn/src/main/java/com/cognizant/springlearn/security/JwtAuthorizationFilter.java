@@ -2,6 +2,7 @@ package com.cognizant.springlearn.security;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -12,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -61,9 +64,16 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                         .setSigningKey("secretkey")
                         .parseClaimsJws(token.replace("Bearer ", ""));
                 String user = jws.getBody().getSubject();
+                String roles = jws.getBody().get("roles", String.class);
                 LOGGER.debug("{}", user);
                 if (user != null) {
-                    return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+                    List<GrantedAuthority> authorities = new ArrayList<>();
+                    if (roles != null && !roles.isEmpty()) {
+                        for (String role : roles.split(",")) {
+                            authorities.add(new SimpleGrantedAuthority(role));
+                        }
+                    }
+                    return new UsernamePasswordAuthenticationToken(user, null, authorities);
                 }
             } catch (JwtException ex) {
                 return null;
