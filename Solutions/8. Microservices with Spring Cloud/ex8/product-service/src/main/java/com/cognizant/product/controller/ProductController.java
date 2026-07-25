@@ -8,8 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cognizant.product.model.Product;
@@ -46,6 +48,16 @@ public class ProductController {
     @PostMapping
     public Product createProduct(@RequestBody Product product) {
         LOGGER.info("START - createProduct: {}", product.getName());
+        LOGGER.info("END");
+        return product;
+    }
+
+    // Update stock quantity for a product, e.g. PUT /products/1/stock?quantity=75
+    @PutMapping("/{id}/stock")
+    public Product updateStock(@PathVariable Long id, @RequestParam Integer quantity) {
+        LOGGER.info("START - updateStock: id={}, quantity={}", id, quantity);
+        Product product = getProduct(id);
+        product.setStockQuantity(quantity);
         LOGGER.info("END");
         return product;
     }

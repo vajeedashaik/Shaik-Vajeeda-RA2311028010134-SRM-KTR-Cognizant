@@ -15,6 +15,6 @@ public class GreetController {
     public String greet() {
         LOGGER.info("START");
         LOGGER.info("END");
-        return "Hello World";
+        return "Hello World!!";
     }
 }
